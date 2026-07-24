@@ -5,6 +5,8 @@ import os
 import logging
 from typing import Dict, Callable, List, Optional
 import re
+from dotenv import load_dotenv
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
