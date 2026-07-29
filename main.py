@@ -57,7 +57,7 @@ __2x__ your bet ft5, 2-0 lead ft5
 __1.5x__ your bet ft3, 1-0 lead
 __1.2x__ your bet ft3, i win ties**
         """
-        self.auto_post_message_2 = """YOUR <:Chime:1526001750908076132> <:exchange:1259265803744972940> <:Cryptos:1259292342536638536> (18+)
+        self.auto_post_message_2 = """YOUR <:Chime:1526001750908076132> <:exchange:1259265803744972940> <:Cryptos:1259292342536638536>
  **• $5**-**$50** - ***__10%__ Fee***
  **• $50**-**$100** - ***__$5__ Fee***
  **• $100**+ - ***__5%__ Fee***
@@ -136,7 +136,7 @@ __1.2x__ your bet ft3, i win ties**
             line3 = f"{num*1.5}v{num} ft3 1-0 lead"
             line4 = f"{num*1.2}v{num} ft3 i win ties"
             
-            reply_content = f"{line1}\n{line2}"
+            reply_content = f"{line1}\n{line2}\n{line3}\n{line4}"
             await original_msg.reply(reply_content)
 
         self.command_handler.register("chime", chime)
