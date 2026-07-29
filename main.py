@@ -51,13 +51,19 @@ class SelfBot(commands.Bot):
         # ================== AUTOPOST CONFIG ==================
         self.auto_post_enabled = False
         self.auto_post_channel_name = "lf-players"          # ← Change channel name here
-        self.auto_post_message = """
-**__3x__ your bet ft5, any 7 total = point to me
+        self.auto_post_message_1 = """**__3x__ your bet ft5, any 7 total = point to me
 __2x__ your bet ft3, any 7 total = point to me
 __2x__ your bet ft5, 2-0 lead ft5
 __1.5x__ your bet ft3, 1-0 lead
 __1.2x__ your bet ft3, i win ties**
         """
+        self.auto_post_message_2 = """YOUR <:Chime:1526001750908076132> <:exchange:1259265803744972940> <:Cryptos:1259292342536638536> (18+)
+ **• $5**-**$50** - ***__10%__ Fee***
+ **• $50**-**$100** - ***__$5__ Fee***
+ **• $100**+ - ***__5%__ Fee***
+[**MIN**: __$5__ / **MAX**: __$500__]
+        """
+        self.auto_post_index = 0          # Tracks which message to send next
         # ====================================================
 
         self._register_builtin_commands()
@@ -147,15 +153,20 @@ __1.2x__ your bet ft3, i win ties**
     async def _autopost_loop(self):
         while self.auto_post_enabled:
             try:
+                # Choose which message to send
+                message = self.auto_post_message_1 if self.auto_post_index == 0 else self.auto_post_message_2
+                self.auto_post_index = 1 - self.auto_post_index   # Flip between 0 and 1
+
                 for guild in self.guilds:
                     for channel in guild.channels:
                         if isinstance(channel, discord.TextChannel) and channel.name.lower() == self.auto_post_channel_name.lower():
                             try:
-                                await channel.send(self.auto_post_message)
-                                logger.info(f"Autoposted to #{channel.name}")
+                                await channel.send(message)
+                                logger.info(f"Autoposted message {self.auto_post_index + 1} to #{channel.name}")
                             except Exception as e:
                                 logger.warning(f"Failed to post: {e}")
-                await asyncio.sleep(300)  # 5 minutes
+
+                await asyncio.sleep(150)  # 2.5 minutes
             except asyncio.CancelledError:
                 break
             except Exception as e:
