@@ -54,9 +54,9 @@ class SelfBot(commands.Bot):
         self.auto_post_message = """
 **__3x__ your bet ft5, any 7 total = point to me
 __2x__ your bet ft3, any 7 total = point to me
-__2x__ your bet, 2-0 lead ft5
-__1.5x__ your bet, 1-0 lead ft3**
-(MIN: $5 | MAX: $200)
+__2x__ your bet ft5, 2-0 lead ft5
+__1.5x__ your bet ft3, 1-0 lead
+__1.2x__ your bet ft5, i win ties**
         """
         # ====================================================
 
@@ -125,8 +125,10 @@ __1.5x__ your bet, 1-0 lead ft3**
                 return
             
             # Generate the two lines
-            line1 = f"{num*2}v{num} ft3 any 7 total = point to me"
-            line2 = f"{num*3}v{num} ft5 any 7 total = point to me"
+            line1 = f"{num*3}v{num} ft5 any 7 total = point to me"
+            line2 = f"{num*2}v{num} ft3 any 7 total = point to me"
+            line3 = f"{num*1.5}v{num} ft3 1-0 lead"
+            line4 = f"{num*1.2}v{num} ft3 i win ties"
             
             reply_content = f"{line1}\n{line2}"
             await original_msg.reply(reply_content)
