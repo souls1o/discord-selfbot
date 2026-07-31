@@ -53,11 +53,11 @@ class SelfBot(commands.Bot):
         self.auto_post_channel_name = "lf-players"          # ← Change channel name here
         self.auto_post_message_1 = """**__3x__ your bet ft5, any 7 total = point to me
 __2x__ your bet ft3, any 7 total = point to me
-__2x__ your bet ft5, 2-0 lead ft5
-__1.5x__ your bet ft3, 1-0 lead
-__1.2x__ your bet ft3, i win ties**
+__2x__ your bet ft5, i get +1 on rolls
+__1.5x__ your bet ft3, i get +1 on rolls
+__1.5x__ your bet ft3, 1-0 lead**
         """
-        self.auto_post_message_2 = """YOUR <:Chime:1526001750908076132> <:exchange:1259265803744972940> <:Cryptos:1259292342536638536>
+        self.auto_post_message_2 = """YOUR 18- <:Cashapp:1259292205873496074> / <:venmo:1427064892896186489> / <:Chime:1526001750908076132> <:exchange:1259265803744972940> <:Cryptos:1259292342536638536>
  **• $5**-**$50** - ***__10%__ Fee***
  **• $50**-**$100** - ***__$5__ Fee***
  **• $100**+ - ***__5%__ Fee***
@@ -116,7 +116,7 @@ __1.2x__ your bet ft3, i win ties**
                 return
             try:
                 msg_id = int(args[0])
-                num = int(args[1])
+                num = float(args[1])
             except ValueError:
                 await ctx.send("Message ID and number must be integers.")
                 return
@@ -130,13 +130,16 @@ __1.2x__ your bet ft3, i win ties**
                 await ctx.send(f"Error fetching message: {e}")
                 return
             
-            # Generate the two lines
-            line1 = f"{num*3}v{num} ft5 any 7 total = point to me"
-            line2 = f"{num*2}v{num} ft3 any 7 total = point to me"
-            line3 = f"{num*1.5}v{num} ft3 1-0 lead"
-            line4 = f"{num*1.2}v{num} ft3 i win ties"
+            def clean(n: float) -> str:
+                return str(int(n)) if n.is_integer() else str(n)
             
-            reply_content = f"{line1}\n{line2}\n{line3}\n{line4}"
+            line1 = f"{clean(num*3)}v{clean(num)} ft5 any 7 total = point to me"
+            line2 = f"{clean(num*2)}v{clean(num)} ft3 any 7 total = point to me"
+            line3 = f"{clean(num*2)}v{clean(num)} ft3 i get +1 on rolls"
+            line4 = f"{clean(num*1.5)}v{clean(num)} ft3 i get +1 on rolls"
+            line5 = f"{clean(num*1.5)}v{clean(num)} ft3 1-0 lead"
+            
+            reply_content = f"{line1}\n{line2}\n{line3}\n{line4}\n{line5}"
             await original_msg.reply(reply_content)
 
         self.command_handler.register("chime", chime)
