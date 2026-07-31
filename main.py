@@ -191,20 +191,25 @@ async def on_message(message: discord.Message):
     if message.author.id != bot.user.id:
         return
 
-    ctx = await bot.get_context(message)
-    if ctx.valid and ctx.command:
-        await bot.process_commands(message)
+    content = message.content.strip()
+    if not content.startswith(PREFIX):
         return
 
-    content = message.content.strip()
-    if content.startswith(PREFIX):
+    args = content[len(PREFIX):].strip().split()
+    if not args:
+        return
+
+    cmd_name = args[0].lower()
+
+    # Only delete if it's a real registered command
+    if cmd_name in bot.command_handler.commands:
         try:
             await message.delete()
         except:
             pass
-        args = content[len(PREFIX):].strip().split()
-        if args:
-            await bot.command_handler.execute(ctx, args)
 
+        ctx = await bot.get_context(message)
+        await bot.command_handler.execute(ctx, args)
+        
 if __name__ == "__main__":
     bot.run(TOKEN)
