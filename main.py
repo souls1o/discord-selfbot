@@ -135,7 +135,7 @@ __1.5x__ your bet ft3, 1-0 lead**
             
             line1 = f"{clean(num*3)}v{clean(num)} ft5 any 7 total = point to me"
             line2 = f"{clean(num*2)}v{clean(num)} ft3 any 7 total = point to me"
-            line3 = f"{clean(num*2)}v{clean(num)} ft3 i get +1 on rolls"
+            line3 = f"{clean(num*2)}v{clean(num)} ft5 i get +1 on rolls"
             line4 = f"{clean(num*1.5)}v{clean(num)} ft3 i get +1 on rolls"
             line5 = f"{clean(num*1.5)}v{clean(num)} ft3 1-0 lead"
             
