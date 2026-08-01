@@ -16,6 +16,11 @@ logger = logging.getLogger('selfbot')
 PREFIX = "!"  
 TOKEN = os.getenv("DISCORD_TOKEN")  
 
+# ================== ROLE PERMISSION ==================
+ALLOWED_ROLE_ID = 1258727325265297408   # ← Put the Role ID that can use coin commands here
+COIN_COMMANDS = {"btc", "ltc", "sol", "eth"}
+# ====================================================
+
 class CommandHandler:
     """Centralized command registry - remains scalable."""
     def __init__(self):
@@ -188,7 +193,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
-    if message.author.id != bot.user.id:
+    # Ignore bots and empty messages
+    if message.author.bot or not message.content:
         return
 
     content = message.content.strip()
@@ -201,15 +207,36 @@ async def on_message(message: discord.Message):
 
     cmd_name = args[0].lower()
 
-    # Only delete if it's a real registered command
-    if cmd_name in bot.command_handler.commands:
+    # Check if the command even exists
+    if cmd_name not in bot.command_handler.commands:
+        return
+
+    is_owner = message.author.id == bot.user.id
+    has_allowed_role = False
+
+    # Check role only in servers
+    if message.guild:
+        has_allowed_role = any(role.id == ALLOWED_ROLE_ID for role in message.author.roles)
+
+    # Permission logic
+    if is_owner:
+        # Owner can use every command
+        allowed = True
+    elif cmd_name in COIN_COMMANDS and has_allowed_role:
+        # Users with the special role can only use coin commands
+        allowed = True
+    else:
+        return  # Not allowed
+
+    # Only delete the message if it's the owner (safer)
+    if is_owner:
         try:
             await message.delete()
         except:
             pass
 
-        ctx = await bot.get_context(message)
-        await bot.command_handler.execute(ctx, args)
-        
+    ctx = await bot.get_context(message)
+    await bot.command_handler.execute(ctx, args)
+
 if __name__ == "__main__":
     bot.run(TOKEN)
